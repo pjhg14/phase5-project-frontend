@@ -14,3 +14,7 @@ code {
 .App {
     text-align: center;
 }
+
+#card {
+    border: 3px black solid;
+}
