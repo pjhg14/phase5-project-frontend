@@ -1,26 +1,23 @@
+import { useEffect, useState } from "react"
 import { Link, useRouteMatch } from "react-router-dom"
 
 function BusinessList() {
     const { url } = useRouteMatch()
-    const user = {}
+    const [businesses, setBusinesses] = useState([])
 
-    if (user.get.error) return <h1>Please log in</h1>
+    useEffect(() => {
+        fetch(`http://localhost:3000/businesses/user/index`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.token}`
+            }
+        })
+            .then(resp => resp.json())
+            .then(queriedBusinesses => setBusinesses(queriedBusinesses))
+    },[])
 
-    const businesses = user.get.applications.map(application => {
-        return application.business
-    })
-    
-    let addedBusinesses = []
-    const filteredBusinesses = businesses.filter(business => {
-        if (!addedBusinesses.find((filterBusiness) => business.name === filterBusiness.name)) {
-            addedBusinesses.push(business)
-            return true
-        } 
-
-        return false
-    })
-
-    const businessList = filteredBusinesses.map(business => {
+    const businessList = businesses.map(business => {
         return(
             <div id="card" key={business.id}>
                 <p>{business.name}</p>

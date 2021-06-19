@@ -8,7 +8,7 @@ function Navigation() {
             <NavLink to="/feed/profile">Profile</NavLink>
             <NavLink to="/feed/applications">Applications</NavLink>
             <NavLink to="/feed/businesses">Buisnesses</NavLink>
-            {/* <NavLink to="/feed/contacts">Contacts</NavLink> */}
+            <NavLink to="/feed/contacts">Contacts</NavLink>
             
         </nav>
     )

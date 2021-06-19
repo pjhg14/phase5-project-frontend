@@ -9,25 +9,37 @@ function ContactInfo() {
     const fixedPath = url.split("/").slice(0,3).join("/")
 
     useEffect(() => {
-        fetch(`http://localhost:3000/contacts/${id}`)
-            .then((resp) => resp.json())
+        fetch(`http://localhost:3000/contacts/${id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.token}`
+            }
+        })
+            .then(resp => resp.json())
             .then(queriedContact => {
                 setContact(queriedContact)
                 setLoaded(true)
             })
-    },[])
+    },[id])
 
     if (!loaded) return <h1>Loading...</h1>
-
-    // console.log(contact)
 
     function handleDelete() {
         fetch(`http://localhost:3000/contacts/${id}`, {
             method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${localStorage.token}`
+            }
         })
-            .then((resp) => resp.json())
-            .then(() => {
-                // handle delete on frontend
+            .then(resp => resp.json())
+            .then(json => {
+                // stuff
+                if (json.error) {
+                    console.log(json.details)
+                } else {
+                    console.log(json.message)
+                }
             });
     }
 
@@ -43,7 +55,7 @@ function ContactInfo() {
     return(
         <div>
             <h3>Contact:</h3>
-            <p>Name: {contact.name}</p>
+            <p>Name: {contact.full_name}</p>
             <p>Email: {contact.email}</p>
             <p>Profile URL: {contact.profile_url}</p>
 

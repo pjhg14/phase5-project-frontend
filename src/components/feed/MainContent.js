@@ -1,13 +1,13 @@
 import { Route, Switch, useRouteMatch } from "react-router-dom";
-import Header from "./Header";
-import Navigation from "./Navigation";
-import ApplicationPage from "../applications/ApplicationPage";
-import BusinessPage from "../buisnesses/BusinessPage";
-import ContactPage from "../contacts/ContactPage";
-import Dashboard from "./Dashboard";
-import Profile from "../users/Profile";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
+import Header from "./Header";
+import Navigation from "./Navigation";
+import Dashboard from "./pages/Dashboard";
+import Profile from "./pages/Profile";
+import ApplicationPage from "./pages/ApplicationPage";
+import BusinessPage from "./pages/BusinessPage";
+import ContactPage from "./pages/ContactPage";
 
 function MainContent() {
     const { url } = useRouteMatch()
@@ -28,7 +28,6 @@ function MainContent() {
 
                 // set global vars
                 dispatch({type: "login", payload: queriedUser})
-                dispatch({type: "setApplications", payload: queriedUser.applications})
 
                 setLoaded(true)
             })
@@ -41,23 +40,18 @@ function MainContent() {
                 <Header />
                 <Navigation />
                 <Switch>
-                    {/* Dashboard route */}
                     <Route path={`${url}/dashboard`}>
                         <Dashboard />
                     </Route>
-                    {/* User profile route */}
                     <Route path={`${url}/profile`}>
                         <Profile />
                     </Route>
-                    {/* Application route */}
                     <Route path={`${url}/applications`}>
                         <ApplicationPage />
                     </Route>
-                    {/* Business route */}
                     <Route path={`${url}/businesses`}>
                         <BusinessPage />
                     </Route>
-                    {/* Contact route */}
                     <Route path={`${url}/contacts`}>
                         <ContactPage />
                     </Route>

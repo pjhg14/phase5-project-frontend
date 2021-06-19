@@ -1,12 +1,10 @@
 import { Route, Switch, useRouteMatch } from "react-router";
-import ApplicationForm from "./ApplicationForm";
-import ApplicationInfo from "./ApplicationInfo";
-import ApplicationList from "./ApplicationList";
+import ApplicationForm from "./forms/ApplicationForm";
+import ApplicationInfo from "./info/ApplicationInfo";
+import ApplicationList from "./lists/ApplicationList";
 
 function ApplicationPage() {
     const { path } = useRouteMatch()
-
-    // console.log(path)
 
     return(
         <Switch>

@@ -1,7 +1,7 @@
 import { Route, Switch, useRouteMatch } from "react-router-dom"
-import BusinessForm from "./BusinessForm"
-import BusinessInfo from "./BusinessInfo"
-import BusinessList from "./BusinessList"
+import BusinessForm from "./forms/BusinessForm"
+import BusinessInfo from "./info/BusinessInfo"
+import BusinessList from "./lists/BusinessList"
 
 function BusinessPage() {
     const { path } = useRouteMatch()

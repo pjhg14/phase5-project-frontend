@@ -9,8 +9,14 @@ function ApplicationInfo() {
     const fixedPath = url.split("/").slice(0,3).join("/")
 
     useEffect(() => {
-        fetch(`http://localhost:3000/applications/${id}`)
-            .then((resp) => resp.json())
+        fetch(`http://localhost:3000/applications/${id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.token}`
+            }
+        })
+            .then(resp => resp.json())
             .then(queriedApplication => {
                 setApplication(queriedApplication)
                 setLoaded(true)
@@ -32,10 +38,17 @@ function ApplicationInfo() {
     function handleDelete() {
         fetch(`http://localhost:3000/applications/${id}`, {
             method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${localStorage.token}`
+            }
         })
-            .then((resp) => resp.json())
-            .then(() => {
-                // handle delete on frontend
+            .then(resp => resp.json())
+            .then(json => {
+                if (json.error) {
+                    console.log(json.details)
+                } else {
+                    console.log(json.message)
+                }
             });
     }
 

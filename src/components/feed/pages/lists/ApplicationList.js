@@ -1,10 +1,21 @@
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 
 function ApplicationList() {
     const { url } = useRouteMatch()
-    // const user = useContext(UserContext)
-    const applications = useSelector(state => state.applicationReducer.applications)
+    const [applications, setApplications] = useState([])
+
+    useEffect(() => {
+        fetch("http://localhost:3000/applications/user/index", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.token}`
+            }
+        })
+            .then(resp => resp.json())
+            .then(queriedApplications => setApplications(queriedApplications))
+    },[])
 
     const applicationList = applications.map(application => {
         return(
