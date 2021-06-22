@@ -22,11 +22,10 @@ function MainContent() {
                 Authorization: `Bearer ${localStorage.token}`
             }
         })
-            .then((resp) => resp.json())
+            .then(resp => resp.json())
             .then(queriedUser => {
                 console.log(queriedUser)
 
-                // set global vars
                 dispatch({type: "login", payload: queriedUser})
 
                 setLoaded(true)
