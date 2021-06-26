@@ -1,6 +1,7 @@
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
+import { Segment } from "semantic-ui-react";
 import Header from "./Header";
 import Navigation from "./Navigation";
 import Dashboard from "./pages/Dashboard";
@@ -8,6 +9,7 @@ import Profile from "./pages/Profile";
 import ApplicationPage from "./pages/ApplicationPage";
 import BusinessPage from "./pages/BusinessPage";
 import ContactPage from "./pages/ContactPage";
+import CalendarPage from "./pages/CalendarPage";
 
 function MainContent() {
     const { url } = useRouteMatch()
@@ -35,26 +37,34 @@ function MainContent() {
     if (!loaded) return <h1>loading...</h1>
 
     return(
-            <div>
+            <div id="main-content">
                 <Header />
                 <Navigation />
-                <Switch>
-                    <Route path={`${url}/dashboard`}>
-                        <Dashboard />
-                    </Route>
-                    <Route path={`${url}/profile`}>
-                        <Profile />
-                    </Route>
-                    <Route path={`${url}/applications`}>
-                        <ApplicationPage />
-                    </Route>
-                    <Route path={`${url}/businesses`}>
-                        <BusinessPage />
-                    </Route>
-                    <Route path={`${url}/contacts`}>
-                        <ContactPage />
-                    </Route>
-                </Switch>
+                <Segment className="custom" attacted="bottom">
+                    <Switch>
+                        <Route path={`${url}/dashboard`}>
+                            <Dashboard />
+                        </Route>
+                        <Route path={`${url}/profile`}>
+                            <Profile />
+                        </Route>
+                        {/* TODO: create re-directs for forms */}
+                        {/* TODO: create error text for failed requests */}
+                        <Route path={`${url}/applications`}>
+                            <ApplicationPage />
+                        </Route>
+                        <Route path={`${url}/businesses`}>
+                            <BusinessPage />
+                        </Route>
+                        <Route path={`${url}/contacts`}>
+                            <ContactPage />
+                        </Route>
+                        <Route path={`${url}/calendar`}>
+                            <CalendarPage />
+                        </Route>
+                    </Switch>
+                </Segment>
+                
             </div>
     )
 }

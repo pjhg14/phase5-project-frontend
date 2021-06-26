@@ -1,7 +1,7 @@
 import './App.css';
 import { Route, Switch } from "react-router-dom";
 import MainContent from './feed/MainContent';
-import LandingPage from "./portal/LandingPage";
+import LandingPage from "./LandingPage";
 import Portal from "./portal/Portal";
 
 

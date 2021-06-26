@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react"
-import { Link, useParams, useRouteMatch } from "react-router-dom"
+import { Link, useHistory, useParams, useRouteMatch } from "react-router-dom"
 
 function BusinessInfo() {
     const { url } = useRouteMatch()
     const { id } = useParams()
+    const history = useHistory()
     const [business, setBusiness] = useState(null)
     const [loaded, setLoaded] = useState(false)
     const fixedPath = url.split("/").slice(0,3).join("/")
@@ -50,6 +51,7 @@ function BusinessInfo() {
                     console.log(json.details)
                 } else {
                     console.log(json.message)
+                    history.push("/feed/businesses")
                 }
             });
     }
@@ -60,6 +62,8 @@ function BusinessInfo() {
             <p>Name: {business.name}</p>
             <p>address: {business.address}</p>
             <p>Field of work: {business.field}</p>
+            <p>Motto: {business.motto}</p>
+            <p>Priority: {business.priority}</p>
             <p>Description: {business.description}</p>
 
             <h4>Applications:</h4>

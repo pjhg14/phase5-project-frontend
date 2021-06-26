@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useHistory } from "react-router";
 import { useParams, Link } from "react-router-dom";
+import { Grid, Message } from 'semantic-ui-react'
 import Login from "./Login";
 import SignUp from "./SignUp";
 
@@ -13,6 +14,8 @@ function Portal() {
     const history = useHistory()
 
     function submitCrdentials(credentials, type) {
+        setErrors([])
+        
         fetch(`http://localhost:3000/users/${type}`, {
             method: "POST",
             headers: {
@@ -23,38 +26,52 @@ function Portal() {
             .then((resp) => resp.json())
             .then(message => {
                 if (message.error) {
-                    // show error in p tag
-                    setErrors(message.details)
+                    // show error in message
+                    setErrors(message.details)  
                 } else {
                     localStorage.token = message.token
                     // console.log(message)
                     history.push("/feed/dashboard")
                 }
-                
             })
     }
 
+    function addError(error) {
+        const uniqueErrors = [...errors, error].filter((value, index, self) => {
+            return self.indexOf(value) === index;
+        })
+        setErrors(uniqueErrors)
+    }
+
     // console.log(errors)
-    const errorText = errors.map(error => {
+    const errorList = errors.map(error => {
         return(
-            <p key={error}>
+            <Message.Item key={error}>
                 {error}
-            </p>
+            </Message.Item>
         )
     })
 
     return(
-        <div>
+        <Grid textAlign="center" verticalAlign="middle" style={{ height: '70vh' }}>
+            <Grid.Column style={{ maxWidth: 450 }}>
             <h3>{lsToggle ? "Login" : "Sign Up"}</h3>
             {lsToggle ? 
                 <Login login={submitCrdentials}/>
                 : 
-                <SignUp signup={submitCrdentials}/>
+                <SignUp signup={submitCrdentials} addError={addError}/>
             }
-            {/* <button onClick={() => setLsToggle(!lsToggle)}>{lsToggle ? "Sign Up" : "Login" }</button> */}
-            <Link to="/">Back</Link>
-            {errorText}
-        </div>
+            <Link className="link" to="/">Back</Link>
+            {errors.length > 0 && 
+                <Message style={{textAlign: "left"}}>
+                    <Message.Header>Error</Message.Header>
+                    <Message.List>
+                        {errorList}
+                    </Message.List>
+                </Message>
+            }
+            </Grid.Column>
+        </Grid>
     )
 }
 

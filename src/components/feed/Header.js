@@ -1,6 +1,12 @@
+import { useSelector } from "react-redux"
+
 function Header() {
+    const user = useSelector(state => state.user)
     return(
-        <h1>This is the Header</h1>
+        <div>
+            <h1>CareerPad</h1>
+            <h3>Hello {user.username}</h3>
+        </div>
     )
 }
 

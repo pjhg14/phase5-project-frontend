@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import { Button, Form } from 'semantic-ui-react'
 
 function ProjectForm({ project, setEditing }) {
     const user = useSelector(state => state.user)
@@ -75,15 +76,34 @@ function ProjectForm({ project, setEditing }) {
     }
 
     return(
-        <form onSubmit={handleFormSubmit}>
-            <label>Project Name:</label>
-            <input type="text" value={name} onChange={e => setName(e.target.value)}/>
-            <label>Date:</label>
-            <input type="date" value={projectDate} onChange={e => setProjectDate(e.target.value)}/>
-            <label>Completed?</label>
-            <input type="checkbox" checked={completed} onChange={e => setCompleted(e.target.checked)}/>      
-            <input type="submit"/>
-        </form>
+        <Form onSubmit={handleFormSubmit}>
+            <Form.Input 
+                type="text" 
+                icon="sticky note" 
+                iconPosition="left" 
+                placeholder="Domain" 
+                value={name} 
+                onChange={e => setName(e.target.value)}
+            />
+
+            <Form.Input 
+                type="date" 
+                label="Date:"
+                labelPosition="left"
+                value={projectDate} 
+                onChange={e => setProjectDate(e.target.value)}
+            />
+
+            <Form.Input 
+                type="checkbox"
+                label="Completed?"
+                labelPosition="left"
+                checked={completed} 
+                onChange={e => setCompleted(e.target.checked)}
+            />
+
+            <Button type="submit">Submit</Button>
+        </Form>
     )
 }
 

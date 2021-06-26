@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
+import { useHistory } from "react-router-dom";
+import { Form, Button } from "semantic-ui-react";
 
 function ApplicationForm() {
     const { id } = useParams()
+    const history = useHistory()
     const user = useSelector(state => state.user)
 
     // form state
+    const [alias, setAlias] = useState("")
+    const [role, setRole] = useState("")
     const [applyDate, setApplyDate] = useState("")
     const [startDate, setStartDate] = useState("")
     const [wageType, setWageType] = useState("")
@@ -27,6 +32,8 @@ function ApplicationForm() {
             })
                 .then((resp) => resp.json())
                 .then(queriedApplication => {
+                    setAlias(queriedApplication.alias)
+                    setRole(queriedApplication.role)
                     setApplyDate(queriedApplication.apply_date)
                     setStartDate(queriedApplication.start_date)
                     setWageType(queriedApplication.wage_type)
@@ -42,7 +49,16 @@ function ApplicationForm() {
             }
         })
             .then(resp => resp.json())
-            .then(queriedBusinesses => setBuisnesses(queriedBusinesses))
+            .then(queriedBusinesses => {
+                // console.log(queriedBusinesses)
+                if (queriedBusinesses.error) {
+                    console.log("Oops, no businesses")
+                } else {
+                    setBuisnesses(queriedBusinesses)
+                    setBusinessPicker(queriedBusinesses[0].id)
+
+                }
+            })
     },[id])
 
     const businessOptions = businesses.map(business => {
@@ -55,6 +71,8 @@ function ApplicationForm() {
         event.preventDefault()
 
         const payload = {
+            alias: alias,
+            role: role,
             apply_date: applyDate,
             start_date: startDate,
             wage_type: wageType,
@@ -80,7 +98,6 @@ function ApplicationForm() {
                 Authorization: `Bearer ${localStorage.token}`
             },
             body: JSON.stringify(newApplication),
-            Authorization: `Bearer ${localStorage.token}`
         })
             .then(resp => resp.json())
             .then(json => {
@@ -89,6 +106,7 @@ function ApplicationForm() {
                     console.log(json.details)
                 } else {
                     console.log(json.message)
+                    history.push(`/feed/applications`)
                 }
             })
     }
@@ -109,6 +127,7 @@ function ApplicationForm() {
                     console.log(json.details)
                 } else {
                     console.log(json.message)
+                    history.push(`/feed/applications/info/${id}`)
                 }
             })
     }
@@ -117,7 +136,11 @@ function ApplicationForm() {
         <div>
             <h2>{!id ? "Create" : "Edit"} Application</h2>
             <h3>Application Form</h3>
-            <form onSubmit={handleFormSubmit}>
+            <Form onSubmit={handleFormSubmit}>
+                <label>Application Alias:</label>
+                <input type="text" value={alias} onChange={e => setAlias(e.target.value)}/>
+                <label>Application Role:</label>
+                <input type="text" value={role} onChange={e => setRole(e.target.value)}/>
                 <label>Application Date:</label>
                 <input type="date" value={applyDate} onChange={e => setApplyDate(e.target.value)}/>
                 <label>Job Start Date:</label>
@@ -131,10 +154,10 @@ function ApplicationForm() {
                     {businessOptions}
                 </select>
 
-                <input type="submit"/>
-            </form>
+                <Button type="submit">Submit</Button>
+            </Form>
             
-            <h3>Business Form (optional)(TODO)</h3>
+            {/* <h3>Business Form (optional)(TODO)</h3> */}
 
         </div>
     )

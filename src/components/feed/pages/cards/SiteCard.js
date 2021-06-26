@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useDispatch } from "react-redux";
-import { Icon } from 'semantic-ui-react'
+import { Icon, Card, Button } from 'semantic-ui-react'
 import SiteForm from "../forms/SiteForm";
 
 function SiteCard({ site }) {
@@ -22,23 +22,27 @@ function SiteCard({ site }) {
     }
 
     return(
-        <div id="card" key={site.id}>
+        <Card>
             {editing ?
                 // Non edit card
-                <div>
+                <Card.Content>
                     <SiteForm site={site} setEditing={setEditing}/>
                     <Icon name="cancel" onClick={() => setEditing(false)}/> 
-                </div> 
+                </Card.Content> 
                 :
                 // Edit card
-                <div>
-                    <p>{site.domain}</p>
-                    <a href={site.url} target="_blank" rel="noreferrer">{site.url}</a>
-                    <Icon name="edit" onClick={() => setEditing(true)}/>
-                </div> 
+                <Card.Content>
+                    <Card.Header>{site.domain}</Card.Header>
+                    <Card.Meta>
+                        <a href={site.url} target="_blank" rel="noreferrer">
+                            {site.url}
+                        </a>
+                        <Button size="mini" icon="edit" onClick={() => setEditing(true)}/>
+                    </Card.Meta>
+                </Card.Content> 
             }
-            <Icon name="trash" onClick={handleDelete}/>
-        </div>
+            <Button icon="trash" color="red" inverted onClick={handleDelete}/>
+        </Card>
     )
 }
 

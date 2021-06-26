@@ -1,15 +1,17 @@
-import { Icon } from 'semantic-ui-react'
+import { Card } from 'semantic-ui-react'
+import ExperienceModal from '../modals/ExperienceModal'
 
 function ExperienceCard({ experience }) {
-
     return(
-        <div id="card" key={experience.id}>
-            <p>{experience.title}</p>
-            <p>{experience.exp_type}</p>
-            <p>{experience.description}</p>
-            {/* add editing modal to edit icon */}
-            <Icon name="edit"/>
-        </div>
+        <Card >
+            <Card.Content>
+                <Card.Header>{experience.title}</Card.Header>
+                <Card.Meta>{experience.exp_type}</Card.Meta>
+            </Card.Content>
+            <Card.Content extra>
+                <ExperienceModal experience={experience}/>
+            </Card.Content>
+        </Card>
     )
 }
 

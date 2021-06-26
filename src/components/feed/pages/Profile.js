@@ -1,10 +1,13 @@
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
+import { Button, Card } from 'semantic-ui-react'
 import SiteCard from "./cards/SiteCard";
 import SiteForm from "./forms/SiteForm";
 import ProjectCard from "./cards/ProjectCard";
 import ProjectForm from "./forms/ProjectForm";
 import ExperienceCard from "./cards/ExperienceCard";
+import AddExperienceModal from "./modals/AddExperienceModal";
+import UserInfo from "./info/UserInfo";
 
 function Profile() {
     const user = useSelector(state => state.user)
@@ -19,33 +22,16 @@ function Profile() {
         </h1>
     )
 
-    // function handleExperienceEdit(experience, column, payload) {
-    //     const editedExperience = {...experience, [column]: payload}
-        
-    //     fetch(`http://localhost:3000/projects/${experience.id}`, {
-    //         method: "PATCH",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //             Authorization: `Bearer ${localStorage.token}`
-    //         },
-    //         body: JSON.stringify(editedExperience)
-    //     })
-    //         .then(resp => resp.json())
-    //         .then(updatedExperience => {
-    //             if (updatedExperience.error) {
-    //                 console.log(updatedExperience.details)
-    //             } else {
-    //                 dispatch({type: "editExperience", payload: updatedExperience})
-    //             }
-    //         })
-    // }
-
     // Sites
     const siteList = user.sites.map(site => {
         return(
             <SiteCard site={site} key={site.id}/>
         )
     })
+
+    function toggleStieForm(event) {
+        dispatch({type: "toggleNewSiteCard"})
+    }
 
     // Projects
     const projectList = user.projects.map(project => {
@@ -67,46 +53,44 @@ function Profile() {
     return(
         <div>
             <h3>Profile</h3>
-            <div id="user-details">
-                <p>username: {user.username}</p>
-                <p>name: {user.full_name}</p>
-                <p>phone: {user.phone}</p>
-                <p>email: {user.email}</p>
-                <button>edit</button>
-            </div>
+            <UserInfo/>
             <h4>Sites:</h4>
-            <div id="user-sites"> 
+            <Card.Group centered> 
                 { siteList }
-                {newSiteShowing && 
-                    <div>
-                        <SiteForm />
-                        <button onClick={() => dispatch({type: "hideNewSiteCard"})}>cancel</button>
-                    </div>
-                }  
-                <div id="card">
-                    <button onClick={() => dispatch({type: "showNewSiteCard"})}>Add Site</button>
-                </div>
-            </div>
+                    <Card>
+                        <Card.Content>
+                            {newSiteShowing && 
+                                <SiteForm />
+                            }
+                        </Card.Content>
+                        <Button onClick={() => dispatch({type: "toggleNewSiteCard"})}>
+                            {newSiteShowing ? "Cancel" : "Add Site"}
+                        </Button>
+                    </Card>
+            </Card.Group>
             <h4>Projects:</h4>
-            <div id="user-projects">
+            <Card.Group centered>
                 { projectList }
-                {newProjectShowing && 
-                    <div>
-                        <ProjectForm />
-                        <button onClick={() => dispatch({type: "hideNewProjectCard"})}>cancel</button>
-                    </div>
-                }
-                <div id="card">
-                    <button onClick={() => dispatch({type: "showNewProjectCard"})}>Add Project</button>
-                </div>
-            </div>
+                    <Card>
+                        <Card.Content>
+                            {newProjectShowing && 
+                                <ProjectForm />
+                            }
+                        </Card.Content>
+                        <Button onClick={() => dispatch({type: "toggleNewProjectCard"})}>
+                            {newProjectShowing ? "Cancel" : "Add Project"}
+                        </Button>
+                    </Card>
+            </Card.Group>
             <h4>Expreiences:</h4>
-            <div id="user-experiences">
+            <Card.Group centered>
                 { experienceList }
-                <div id="card">
-                    <button>Add Experience</button>
-                </div>
-            </div>
+                <Card>
+                    <Card.Content>
+                        <AddExperienceModal />
+                    </Card.Content>
+                </Card>
+            </Card.Group>
         </div>
     )
 }

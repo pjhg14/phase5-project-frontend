@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react"
-import { Link, useParams, useRouteMatch } from "react-router-dom"
+import { Link, useHistory, useParams, useRouteMatch } from "react-router-dom"
 
 function ContactInfo() {
     const { url } = useRouteMatch()
     const { id } = useParams()
+    const history = useHistory()
     const [contact, setContact] = useState(null)
     const [loaded, setLoaded] = useState(false)
     const fixedPath = url.split("/").slice(0,3).join("/")
@@ -39,6 +40,7 @@ function ContactInfo() {
                     console.log(json.details)
                 } else {
                     console.log(json.message)
+                    history.push("/feed/contacts")
                 }
             });
     }

@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Card } from "semantic-ui-react";
+import ApplicationCard from "./cards/ApplicationCard";
+import BusinessCard from "./cards/BusinessCard";
+import ContactCard from "./cards/ContactCard";
 
 function Dashboard() {
     const [applications, setApplications] = useState([])
@@ -14,56 +17,54 @@ function Dashboard() {
                 Authorization: `Bearer ${localStorage.token}`
             }
         })
-            .then((resp) => resp.json())
+            .then(resp => resp.json())
             .then(queriedModels => {
-                setApplications(queriedModels.applications)
-                setBusinesses(queriedModels.businesses)
-                setContacts(queriedModels.contacts)
-
-                // setLoaded(true)
+                setApplications(queriedModels.applications ? queriedModels.applications : [])
+                setBusinesses(queriedModels.businesses ? queriedModels.businesses : [])
+                setContacts(queriedModels.contacts ? queriedModels.contacts : [])
             })
     },[])
 
     const applicationList = applications.map(application => {
         return(
-            <div id="card" key={application.id}>
-                {/* <p>application to: {application.business.name}</p> */}
-                <p>apply date: {application.apply_date}</p>
-                <p>{application.wage_type === "Salary" ? "Salary" : "Hourly wage"}: ${application.wage}</p>
-                <Link to={`/feed/applications/info/${application.id}`}>Info</Link>
-            </div>
+            <ApplicationCard application={application} key={application.id}/>
         )
     })
 
     const businessList = businesses.map(business => {
         return(
-            <div id="card" key={business.id}>
-                <p>{business.name}</p>
-                <p>address: {business.address}</p>
-                <p>priority: </p>
-                <Link to={`/feed/businesses/info/${business.id}`}>Info</Link>
-            </div>
+            <BusinessCard business={business} key={business.id}/>
         )
     })
 
     const contactList = contacts.map(contact => {
         return(
-            <div id="card" key={contact.id}>
-                <p>{contact.full_name}</p>
-                <p>{contact.email}</p>
-                <Link to={`/feed/contacts/info/${contact.id}`}>Info</Link>
-            </div>
+            <ContactCard contact={contact} key={contact.id}/>
         )
     })
 
     return(
-        <div>
-            <h3>Top Applications</h3>
-            {applicationList}
-            <h3>Top Businesses</h3>
-            {businessList}
-            <h3>Top Contacts</h3>
-            {contactList}
+        <div id="dashboard">
+            <div id="db-app-section">
+                <h3>Top Applications</h3>
+                <Card.Group centered>    
+                    {applicationList}
+                </Card.Group>
+            </div>
+            
+            <div id="db-bus-section">
+                <h3>Top Businesses</h3>
+                <Card.Group centered>
+                    {businessList}
+                </Card.Group>
+            </div>
+            
+             <div id="db-cont-section">
+                <h3>Top Contacts</h3>
+                <Card.Group centered>
+                    {contactList}
+                </Card.Group>
+             </div>
         </div>
     )
 }

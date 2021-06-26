@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { useParams } from "react-router"
+import { useHistory } from "react-router-dom"
+import { Form, Button } from "semantic-ui-react";
 
 function BusinessForm() {
     const { id } = useParams()
+    const history = useHistory()
     const user = useSelector(state => state.user)
     const [name, setName] = useState("")
     const [address, setAddress] = useState("")
     const [field, setField] = useState("")
+    const [motto, setMotto] = useState("")
+    const [priority, setPriority] = useState("")
     const [description, setDescription] = useState("")
 
     useEffect(() => {
@@ -24,6 +29,8 @@ function BusinessForm() {
                     setName(queriedBusiness.name)
                     setAddress(queriedBusiness.address)
                     setField(queriedBusiness.field)
+                    setMotto(queriedBusiness.motto)
+                    setPriority(queriedBusiness.priority)
                     setDescription(queriedBusiness.description)
                 })
         }
@@ -36,6 +43,8 @@ function BusinessForm() {
             name: name,
             address: address,
             field: field,
+            motto: motto,
+            priority: parseInt(priority),
             description: description,
             user_id: user.id
         }
@@ -65,7 +74,7 @@ function BusinessForm() {
                     console.log(json.details)
                 } else {
                     console.log(json.message)
-                    // console.log(json)
+                    history.push(`/feed/businesses`)
                 }
             })
     }
@@ -86,7 +95,7 @@ function BusinessForm() {
                     console.log(json.details)
                 } else {
                     console.log(json.message)
-                    // console.log(json)
+                    history.push(`/feed/businesses/info/${id}`)
                 }
             })
     }
@@ -95,18 +104,22 @@ function BusinessForm() {
         <div>
             <h2>{!id ? "Add" : "Edit"} Business</h2>
             <h3>Business Form</h3>
-            <form onSubmit={handleFormSubmit}>
+            <Form onSubmit={handleFormSubmit}>
                 <label>Business Name:</label>
                 <input type="text" value={name} onChange={e => setName(e.target.value)}/>
                 <label>Address:</label>
                 <input type="text" value={address} onChange={e => setAddress(e.target.value)}/>
                 <label>Field:</label>
                 <input type="text" value={field} onChange={e => setField(e.target.value)}/>
+                <label>Motto:</label>
+                <input type="text" value={motto} onChange={e => setMotto(e.target.value)}/>
+                <label>Priority:</label>
+                <input type="number" value={priority} onChange={e => setPriority(e.target.value)}/>
                 <label>Description:</label>
                 <textarea type="text" value={description} onChange={e => setDescription(e.target.value)}/>
 
-                <input type="submit"/>
-            </form>
+                <Button type="submit">Submit</Button>
+            </Form>
         </div>
     )
 }

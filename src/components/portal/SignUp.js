@@ -1,6 +1,7 @@
 import { useState } from "react"
+import { Button, Form } from 'semantic-ui-react'
 
-function SignUp({ signup }) {
+function SignUp({ signup, addError }) {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [passwordConf, setPasswordConf] = useState("")
@@ -10,15 +11,22 @@ function SignUp({ signup }) {
     const [phone, setPhone] = useState("")
     const [email, setEmail] = useState("")
 
-    const [pwdError, setPwdError] = useState("")
+    // const [pwdError, setPwdError] = useState("")
 
     function onFormSubmit(event) {
         event.preventDefault()
 
         if (password !== passwordConf) {
-            setPwdError(true)
+            addError("Password fields must match")
+            // setPwdError(true)
+            setUsername("")
             setPassword("")
             setPasswordConf("")
+            setFirstName("")
+            setLastName("")
+            setSuffix("")
+            setPhone("")
+            setEmail("")
             
             return
         }
@@ -45,37 +53,81 @@ function SignUp({ signup }) {
     }
 
     return(
-        <div>
-            <form onSubmit={onFormSubmit}>
-                <label>username</label>
-                <input type="text" value={username} onChange={e => setUsername(e.target.value)} />
+        <Form onSubmit={onFormSubmit}>
+            <Form.Input 
+                type="text" 
+                icon="user" 
+                iconPosition="left" 
+                placeholder="Username" 
+                value={username} 
+                onChange={e => setUsername(e.target.value)}
+            />
 
-                <label>password</label>
-                <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
+            <Form.Input 
+                type="password" 
+                icon="lock" 
+                iconPosition="left" 
+                placeholder="Password" 
+                value={password} 
+                onChange={e => setPassword(e.target.value)}
+            />
 
-                <label>passwordConf</label>
-                <input type="password" value={passwordConf} onChange={e => setPasswordConf(e.target.value)} />
+            <Form.Input 
+                type="password" 
+                icon="lock" 
+                iconPosition="left" 
+                placeholder="Verify Password" 
+                value={passwordConf} 
+                onChange={e => setPasswordConf(e.target.value)}
+            />
 
-                <label>firstName</label>
-                <input type="text" value={firstName} onChange={e => setFirstName(e.target.value)} />
+            <Form.Input 
+                type="text" 
+                icon="tag" 
+                iconPosition="left" 
+                placeholder="First Name" 
+                value={firstName} 
+                onChange={e => setFirstName(e.target.value)}
+            />
 
-                <label>lastName</label>
-                <input type="text" value={lastName} onChange={e => setLastName(e.target.value)} />
+            <Form.Input 
+                type="text" 
+                icon="tag" 
+                iconPosition="left" 
+                placeholder="Last Name" 
+                value={lastName} 
+                onChange={e => setLastName(e.target.value)}
+            />
 
-                <label>suffix</label>
-                <input type="text" value={suffix} onChange={e => setSuffix(e.target.value)} />
+            <Form.Input 
+                type="text" 
+                icon="tag" 
+                iconPosition="left" 
+                placeholder="Suffix" 
+                value={suffix}
+                onChange={e => setSuffix(e.target.value)}
+            />
 
-                <label>phone</label>
-                <input type="text" value={phone} onChange={e => setPhone(e.target.value)} />
+            <Form.Input 
+                type="text" 
+                icon="phone" 
+                iconPosition="left" 
+                placeholder="Phone Number" 
+                value={phone} 
+                onChange={e => setPhone(e.target.value)}
+            />
 
-                <label>email</label>
-                <input type="text" value={email} onChange={e => setEmail(e.target.value)} />
+            <Form.Input 
+                type="text" 
+                icon="mail" 
+                iconPosition="left" 
+                placeholder="Email" 
+                value={email} 
+                onChange={e => setEmail(e.target.value)}
+            />
 
-                <input type="submit" />
-            </form>
-            {pwdError && <p>Password fields must match</p>}
-        </div>
-        
+            <Button type="submit">Submit</Button>
+        </Form>
     )
 }
 

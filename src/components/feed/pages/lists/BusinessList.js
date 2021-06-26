@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react"
 import { Link, useRouteMatch } from "react-router-dom"
+import { Card, Divider } from "semantic-ui-react";
+import BusinessCard from "../cards/BusinessCard";
 
 function BusinessList() {
     const { url } = useRouteMatch()
@@ -19,21 +21,18 @@ function BusinessList() {
 
     const businessList = businesses.map(business => {
         return(
-            <div id="card" key={business.id}>
-                <p>{business.name}</p>
-                <p>address: {business.address}</p>
-                <p>priority: </p>
-                <Link to={`/feed/businesses/info/${business.id}`}>Info</Link>
-            </div>
+            <BusinessCard business={business} key={business.id}/>
         )
     })
 
     return(
         <div>
             <h3>Business List:</h3>
-            {businessList}
+            <Card.Group centered>
+                {businessList}
+            </Card.Group>
 
-            <h4>New Business</h4>
+            <Divider horizontal>New Business</Divider>
             <Link to={`${url}/add`}>Add</Link>
         </div>
     )

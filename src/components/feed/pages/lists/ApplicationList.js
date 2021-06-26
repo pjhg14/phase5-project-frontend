@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
+import { Card, Divider } from "semantic-ui-react";
+import ApplicationCard from "../cards/ApplicationCard";
 
 function ApplicationList() {
     const { url } = useRouteMatch()
@@ -19,21 +21,18 @@ function ApplicationList() {
 
     const applicationList = applications.map(application => {
         return(
-            <div id="card" key={application.id}>
-                <p>application to: {application.business.name}</p>
-                <p>apply date: {application.apply_date}</p>
-                <p>{application.wage_type === "Salary" ? "Salary" : "Hourly wage"}: ${application.wage}</p>
-                <Link to={`/feed/applications/info/${application.id}`}>Info</Link>
-            </div>
+            <ApplicationCard application={application} key={application.id}/>
         )
     })
 
     return(
         <div>
             <h3>Application List:</h3>
-            {applicationList}
+            <Card.Group centered>
+                {applicationList}
+            </Card.Group>
             
-            <h4>New Application</h4>
+            <Divider horizontal>New Application</Divider>
             <Link to={`${url}/add`}>Add</Link>
         </div>
     )

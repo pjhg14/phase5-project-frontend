@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import { Button, Form } from 'semantic-ui-react'
 
 function SiteForm({ site, setEditing }) {
     const user = useSelector(state => state.user)
@@ -72,13 +73,27 @@ function SiteForm({ site, setEditing }) {
     }
 
     return(
-        <form onSubmit={handleFormSubmit}>
-            <label>Domain:</label>
-            <input type="text" value={domain} onChange={e => setDomain(e.target.value)}/>
-            <label>URL:</label>
-            <input type="text" value={url} onChange={e => setURL(e.target.value)}/>
-            <input type="submit"/>
-        </form>
+        <Form onSubmit={handleFormSubmit}>
+            <Form.Input 
+                type="text" 
+                icon="world" 
+                iconPosition="left" 
+                placeholder="Domain" 
+                value={domain} 
+                onChange={e => setDomain(e.target.value)}
+            />
+
+            <Form.Input 
+                type="text" 
+                icon="linkify" 
+                iconPosition="left" 
+                placeholder="URL" 
+                value={url} 
+                onChange={e => setURL(e.target.value)}
+            />
+
+            <Button type="submit">Submit</Button>
+        </Form>
     )
 }
 

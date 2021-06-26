@@ -66,6 +66,11 @@ function userReducer(state = initialState, action) {
                 ...state,
                 new_site_showing: false
             }
+        case "toggleNewSiteCard":
+            return {
+                ...state,
+                new_site_showing: !state.new_site_showing
+            }
         // End Site Model =======================================================================================>
 
         // Project Model ========================================================================================>
@@ -113,6 +118,11 @@ function userReducer(state = initialState, action) {
             return {
                 ...state,
                 new_project_showing: false
+            }
+        case "toggleNewProjectCard":
+            return {
+                ...state,
+                new_project_showing: !state.new_project_showing
             }
         // End Project Model ====================================================================================>
 

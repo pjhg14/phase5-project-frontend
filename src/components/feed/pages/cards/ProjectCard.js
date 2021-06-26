@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useDispatch } from "react-redux";
-import { Icon } from 'semantic-ui-react'
+import { Icon, Card, Button } from 'semantic-ui-react'
 import ProjectForm from "../forms/ProjectForm";
 
 function ProjectCard({ project }) {
@@ -22,24 +22,26 @@ function ProjectCard({ project }) {
     }
 
     return(
-        <div id="card">
+        <Card>
             {editing ?
                 // Non edit card
-                <div>
+                <Card.Content>
                     <ProjectForm project={project} setEditing={setEditing}/>
                     <Icon name="cancel" onClick={() => setEditing(false)}/> 
-                </div> 
+                </Card.Content> 
                 :
                 // Edit card
-                <div>
-                    <p>{project.name}</p>
-                    <p>{project.project_date}</p>
-                    <p>Completed? {project.completed ? "Yes" : "No"}</p>
-                    <Icon name="edit" onClick={() => setEditing(true)}/>
-                </div> 
+                <Card.Content>
+                    <Card.Header>{project.name}</Card.Header>
+                    <Card.Meta>
+                        <p>{project.project_date}</p>
+                        Completed? {project.completed ? "Yes" : "No"}
+                        <Button size="mini" icon="edit" onClick={() => setEditing(true)}/>
+                    </Card.Meta>
+                </Card.Content> 
             }
-            <Icon name="trash" onClick={handleDelete}/>
-        </div>
+            <Button icon="trash" color="red" inverted onClick={handleDelete}/>
+        </Card>
     )
 }
 

@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link, useParams, useRouteMatch } from "react-router-dom";
+import { Link, useHistory, useParams, useRouteMatch } from "react-router-dom";
 
 function ApplicationInfo() {
     const { id } = useParams()
     const { url } = useRouteMatch()
+    const history = useHistory()
     const [application, setApplication] = useState(null)
     const [loaded, setLoaded] = useState(false)
     const fixedPath = url.split("/").slice(0,3).join("/")
@@ -48,6 +49,7 @@ function ApplicationInfo() {
                     console.log(json.details)
                 } else {
                     console.log(json.message)
+                    history.push(".feed/applications")
                 }
             });
     }
@@ -55,6 +57,8 @@ function ApplicationInfo() {
     return(
         <div>
             <h2>Application:</h2>
+            <p>Application alias: {application.alias}</p>
+            <p>Role: {application.role}</p>
             <p>Apply Date: {application.apply_date}</p>
             <p>Start Date: {application.start_date}</p>
             <p>Wage type: {application.wage_type}</p>

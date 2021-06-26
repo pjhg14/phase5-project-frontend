@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { Button, Form } from 'semantic-ui-react'
 
 function Login({ login }) {
     const [email, setEmail] = useState("")
@@ -18,15 +19,27 @@ function Login({ login }) {
     }
 
     return(
-        <form onSubmit={onFormSubmit}>
-            <label>Email</label>
-            <input type="text" value={email} onChange={e => setEmail(e.target.value)} />
+        <Form onSubmit={onFormSubmit}>
+            <Form.Input 
+                type="text" 
+                icon="mail" 
+                iconPosition="left" 
+                placeholder="Email" 
+                value={email} 
+                onChange={e => setEmail(e.target.value)}
+            />
 
-            <label>Password</label>
-            <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
+            <Form.Input 
+                type="password" 
+                icon="lock" 
+                iconPosition="left" 
+                placeholder="Password" 
+                value={password} 
+                onChange={e => setPassword(e.target.value)}
+            />
 
-            <input type="submit" />
-        </form>
+            <Button type="submit">Submit</Button>
+        </Form>
     )
 }
 

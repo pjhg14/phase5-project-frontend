@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { useParams } from "react-router"
+import { useHistory } from "react-router-dom"
+import { Form, Button } from "semantic-ui-react";
 
 function ContactForm() {
     const { id } = useParams()
+    const history = useHistory()
     const user = useSelector(state => state.user)
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
@@ -46,7 +49,10 @@ function ContactForm() {
             }
         })
             .then(resp => resp.json())
-            .then(queriedApplications => setApplications(queriedApplications))
+            .then(queriedApplications => {
+                setApplications(queriedApplications)
+                setApplicationPicker(queriedApplications[0].id)
+            })
     },[id])
 
     const applicationOptions = applications.map(application => {
@@ -94,7 +100,7 @@ function ContactForm() {
                     console.log(json.details)
                 } else {
                     console.log(json.message)
-                    // console.log(json)
+                    history.push(`/feed/contacts`)
                 }
             })
     }
@@ -115,7 +121,7 @@ function ContactForm() {
                     console.log(json.details)
                 } else {
                     console.log(json.message)
-                    // console.log(json)
+                    history.push(`/feed/contacts/info/${id}`)
                 }
             })
     }
@@ -124,7 +130,7 @@ function ContactForm() {
         <div>
             <h2>{!id ? "Add" : "Edit"} Contact</h2>
             <h3>Contact Form</h3>
-            <form onSubmit={handleFormSubmit}>
+            <Form onSubmit={handleFormSubmit}>
                 <label>First Name:</label>
                 <input type="text" value={firstName} onChange={e => setFirstName(e.target.value)}/>
                 <label>Last Name:</label>
@@ -136,15 +142,18 @@ function ContactForm() {
                 <label>Profile:</label>
                 <input type="text" value={profileURL} onChange={e => setProfileURL(e.target.value)}/>
                 {!id && 
-                    <select value={applicationPicker} onChange={e => setApplicationPicker(e.target.value)}>
-                        <option value="">Please Select an Application</option>
-                        {applicationOptions}
-                    </select>
+                    <>
+                        <label>Application:</label>
+                        <select value={applicationPicker} onChange={e => setApplicationPicker(e.target.value)}>
+                            <option value="">Please Select an Application</option>
+                            {applicationOptions}
+                        </select>
+                    </>
                 }
                 
 
-                <input type="submit"/>
-            </form>
+                <Button type="submit">Submit</Button>
+            </Form>
         </div>
     )
 }

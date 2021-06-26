@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
 import { useRouteMatch } from "react-router"
 import { Link } from "react-router-dom"
+import { Card, Divider } from "semantic-ui-react"
+import ContactCard from "../cards/ContactCard";
 
 function ContactList() {
     const { url } = useRouteMatch()
@@ -20,20 +22,18 @@ function ContactList() {
 
     const contactList = contacts.map(contact => {
         return(
-            <div id="card" key={contact.id}>
-                <p>{contact.full_name}</p>
-                <p>{contact.email}</p>
-                <Link to={`/feed/contacts/info/${contact.id}`}>Info</Link>
-            </div>
+            <ContactCard contact={contact} key={contact.id}/>
         )
     })
 
     return(
         <div>
             <h3>Contact List:</h3>
-            {contactList}
+            <Card.Group centered>
+                {contactList}
+            </Card.Group>
             
-            <h4>New Contact</h4>
+            <Divider horizontal>New Contact</Divider>
             <Link to={`${url}/add`}>Add</Link>
         </div>
     )
