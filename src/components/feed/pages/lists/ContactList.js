@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useRouteMatch } from "react-router"
 import { Link } from "react-router-dom"
 import { Card, Divider } from "semantic-ui-react"
+import { contactURL } from "../../../../utility/Links";
 import ContactCard from "../cards/ContactCard";
 
 function ContactList() {
@@ -9,7 +10,7 @@ function ContactList() {
     const [contacts, setContacts] = useState([])
 
     useEffect(() => {
-        fetch(`http://localhost:3000/contacts/user/index`, {
+        fetch(`${contactURL}/user/index`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

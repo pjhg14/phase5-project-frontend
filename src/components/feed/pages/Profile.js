@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
-import { Button, Card } from 'semantic-ui-react'
+import { Button, Card, Icon } from 'semantic-ui-react'
 import SiteCard from "./cards/SiteCard";
 import SiteForm from "./forms/SiteForm";
 import ProjectCard from "./cards/ProjectCard";
@@ -29,10 +29,6 @@ function Profile() {
         )
     })
 
-    function toggleStieForm(event) {
-        dispatch({type: "toggleNewSiteCard"})
-    }
-
     // Projects
     const projectList = user.projects.map(project => {
         return(
@@ -42,9 +38,6 @@ function Profile() {
     
     // Experiences
     const experienceList = user.experiences.map(experience => {
-        // TODO: Experiences might need a modal to show full description
-        // modal will contain edit form
-        // add modal for new experience
         return(
             <ExperienceCard experience={experience} key={experience.id}/>
         )
@@ -52,15 +45,20 @@ function Profile() {
 
     return(
         <div>
-            <h3>Profile</h3>
-            <UserInfo/>
-            <h4>Sites:</h4>
+            <h2>Profile</h2>
+            <UserInfo />
+            <h3>Sites:</h3>
             <Card.Group centered> 
                 { siteList }
                     <Card>
                         <Card.Content>
-                            {newSiteShowing && 
+                            {newSiteShowing ? 
                                 <SiteForm />
+                                :
+                                <Icon.Group size="huge">
+                                    <Icon name="world" />
+                                    <Icon name="add" corner />
+                                </Icon.Group>
                             }
                         </Card.Content>
                         <Button onClick={() => dispatch({type: "toggleNewSiteCard"})}>
@@ -68,13 +66,18 @@ function Profile() {
                         </Button>
                     </Card>
             </Card.Group>
-            <h4>Projects:</h4>
+            <h3>Projects:</h3>
             <Card.Group centered>
                 { projectList }
                     <Card>
                         <Card.Content>
-                            {newProjectShowing && 
+                            {newProjectShowing ? 
                                 <ProjectForm />
+                                :
+                                <Icon.Group size="huge">
+                                    <Icon name="puzzle" />
+                                    <Icon name="add" corner />
+                                </Icon.Group>
                             }
                         </Card.Content>
                         <Button onClick={() => dispatch({type: "toggleNewProjectCard"})}>
@@ -82,13 +85,17 @@ function Profile() {
                         </Button>
                     </Card>
             </Card.Group>
-            <h4>Expreiences:</h4>
+            <h3>Expreiences:</h3>
             <Card.Group centered>
                 { experienceList }
                 <Card>
                     <Card.Content>
-                        <AddExperienceModal />
+                        <Icon.Group size="huge">
+                            <Icon name="certificate" />
+                            <Icon name="add" corner />
+                        </Icon.Group>
                     </Card.Content>
+                    <AddExperienceModal />
                 </Card>
             </Card.Group>
         </div>

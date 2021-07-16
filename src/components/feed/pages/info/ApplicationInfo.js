@@ -1,16 +1,24 @@
 import { useEffect, useState } from "react";
-import { Link, useHistory, useParams, useRouteMatch } from "react-router-dom";
+import { useHistory, useParams, useRouteMatch } from "react-router-dom";
+import { Button, Card, Divider } from "semantic-ui-react";
+import { applicationURL } from "../../../../utility/Links";
+import ContactCard from "../cards/ContactCard";
 
 function ApplicationInfo() {
+    // Hooks
     const { id } = useParams()
     const { url } = useRouteMatch()
     const history = useHistory()
+
+    // State
     const [application, setApplication] = useState(null)
     const [loaded, setLoaded] = useState(false)
-    const fixedPath = url.split("/").slice(0,3).join("/")
+    
+    // Path
+    const fixedPath = url.split("/").slice(0,3).join("/") // "/feed/applications"
 
     useEffect(() => {
-        fetch(`http://localhost:3000/applications/${id}`, {
+        fetch(`${applicationURL}/${id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -28,16 +36,12 @@ function ApplicationInfo() {
 
     const contactList = application.contacts.map(contact => {
         return(
-            <div id="card" key={contact.id}>
-                <p>{contact.name}</p>
-                <p>{contact.email}</p>
-                <Link to={`/feed/contacts/info/${contact.id}`}>Info</Link>
-            </div>
+            <ContactCard contact={contact} key={contact.id}/>
         )
     })
 
     function handleDelete() {
-        fetch(`http://localhost:3000/applications/${id}`, {
+        fetch(`${applicationURL}/${id}`, {
             method: "DELETE",
             headers: {
                 Authorization: `Bearer ${localStorage.token}`
@@ -69,13 +73,18 @@ function ApplicationInfo() {
             <p>address: {application.business.address}</p>
 
             <h3>Contacts:</h3>
-            {contactList}
-            
-            <h4>Edit Application</h4>
-            <Link to={`${fixedPath}/edit/${id}`}>edit</Link>
+            <Card.Group centered>
+                {contactList}
+            </Card.Group>
 
-            <h4>Delete Application</h4>
-            <button onClick={handleDelete}>Delete</button>
+            <Divider horizontal />
+
+            <div id="button-bar">
+                <Button icon="arrow left" onClick={() => history.push(fixedPath)} />
+                <Button onClick={() => history.push(`${fixedPath}/edit/${id}`)}>Edit</Button>
+                <Button onClick={handleDelete} color="red" inverted>Delete</Button>
+            </div>
+            
         </div>
     )
 }

@@ -37,11 +37,13 @@ function SiteCard({ site }) {
                         <a href={site.url} target="_blank" rel="noreferrer">
                             {site.url}
                         </a>
-                        <Button size="mini" icon="edit" onClick={() => setEditing(true)}/>
                     </Card.Meta>
                 </Card.Content> 
             }
-            <Button icon="trash" color="red" inverted onClick={handleDelete}/>
+            <Button.Group>
+                <Button icon="edit" onClick={() => setEditing(true)}/>
+                <Button icon="trash" color="red" inverted onClick={handleDelete}/>
+            </Button.Group>
         </Card>
     )
 }

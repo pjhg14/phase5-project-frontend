@@ -1,16 +1,24 @@
 import { useEffect, useState } from "react"
-import { Link, useHistory, useParams, useRouteMatch } from "react-router-dom"
+import { useHistory, useParams, useRouteMatch } from "react-router-dom"
+import { Button, Card, Divider } from "semantic-ui-react"
+import { businessURL } from "../../../../utility/Links"
+import ApplicationCard from "../cards/ApplicationCard"
 
 function BusinessInfo() {
+    // Hooks
     const { url } = useRouteMatch()
     const { id } = useParams()
     const history = useHistory()
+
+    // State
     const [business, setBusiness] = useState(null)
     const [loaded, setLoaded] = useState(false)
+
+    // Path
     const fixedPath = url.split("/").slice(0,3).join("/")
 
     useEffect(() => {
-        fetch(`http://localhost:3000/businesses/${id}`, {
+        fetch(`${businessURL}/${id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -28,17 +36,12 @@ function BusinessInfo() {
 
     const applicationList = business.applications.map(application => {
         return(
-            <div id="card" key={application.id}>
-                {/* <p>application to: {application.business.name}</p> */}
-                <p>apply date: {application.apply_date}</p>
-                <p>{application.wage_type === "Salary" ? "Salary" : "Hourly wage"}: ${application.wage}</p>
-                <Link to={`/feed/applications/info/${application.id}`}>Info</Link>
-            </div>
+            <ApplicationCard application={application} key={application.id}/>
         )
     })
 
     function handleDelete() {
-        fetch(`http://localhost:3000/businesses/${id}`, {
+        fetch(`${businessURL}/${id}`, {
             method: "DELETE",
             headers: {
                 Authorization: `Bearer ${localStorage.token}`
@@ -67,13 +70,17 @@ function BusinessInfo() {
             <p>Description: {business.description}</p>
 
             <h4>Applications:</h4>
-            
-            { applicationList }
-            <h4>Edit Business</h4>
-            <Link to={`${fixedPath}/edit/${id}`}>edit</Link>
+            <Card.Group centered>
+                { applicationList }
+            </Card.Group>
 
-            <h4>Delete Business</h4>
-            <button onClick={handleDelete}>Delete</button>
+            <Divider horizontal />
+
+            <div id="button-bar">
+                <Button icon="arrow left" onClick={() => history.push(fixedPath)} />
+                <Button onClick={() => history.push(`${fixedPath}/edit/${id}`)}>Edit</Button>
+                <Button onClick={handleDelete} color="red" inverted>Delete</Button>
+            </div>
         </div>
     )
 }

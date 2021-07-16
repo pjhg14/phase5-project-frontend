@@ -11,14 +11,11 @@ function SignUp({ signup, addError }) {
     const [phone, setPhone] = useState("")
     const [email, setEmail] = useState("")
 
-    // const [pwdError, setPwdError] = useState("")
-
     function onFormSubmit(event) {
         event.preventDefault()
 
         if (password !== passwordConf) {
             addError("Password fields must match")
-            // setPwdError(true)
             setUsername("")
             setPassword("")
             setPasswordConf("")

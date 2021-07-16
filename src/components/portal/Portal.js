@@ -2,28 +2,26 @@ import { useState } from "react"
 import { useHistory } from "react-router";
 import { useParams, Link } from "react-router-dom";
 import { Grid, Message } from 'semantic-ui-react'
+import { userURL } from "../../utility/Links";
 import Login from "./Login";
 import SignUp from "./SignUp";
 
 function Portal() {
     const { type } = useParams()
-    const lsToggle = type === "login"
-    // const [lsToggle, setLsToggle] = useState(type === "login")
     const [errors, setErrors] = useState([])
-
     const history = useHistory()
 
     function submitCrdentials(credentials, type) {
         setErrors([])
         
-        fetch(`http://localhost:3000/users/${type}`, {
+        fetch(`${userURL}/${type}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(credentials),
         })
-            .then((resp) => resp.json())
+            .then(resp => resp.json())
             .then(message => {
                 if (message.error) {
                     // show error in message
@@ -43,7 +41,6 @@ function Portal() {
         setErrors(uniqueErrors)
     }
 
-    // console.log(errors)
     const errorList = errors.map(error => {
         return(
             <Message.Item key={error}>
@@ -55,15 +52,21 @@ function Portal() {
     return(
         <Grid textAlign="center" verticalAlign="middle" style={{ height: '70vh' }}>
             <Grid.Column style={{ maxWidth: 450 }}>
-            <h3>{lsToggle ? "Login" : "Sign Up"}</h3>
-            {lsToggle ? 
+            <h3>
+                {type === "login" ? 
+                    "Login" 
+                    : 
+                    "Sign Up"
+                }
+            </h3>
+            {type === "login" ? 
                 <Login login={submitCrdentials}/>
                 : 
                 <SignUp signup={submitCrdentials} addError={addError}/>
             }
             <Link className="link" to="/">Back</Link>
             {errors.length > 0 && 
-                <Message style={{textAlign: "left"}}>
+                <Message style={{textAlign: "left"}} error >
                     <Message.Header>Error</Message.Header>
                     <Message.List>
                         {errorList}

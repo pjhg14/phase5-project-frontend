@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { Link, useRouteMatch } from "react-router-dom"
 import { Card, Divider } from "semantic-ui-react";
+import { businessURL } from "../../../../utility/Links";
 import BusinessCard from "../cards/BusinessCard";
 
 function BusinessList() {
@@ -8,7 +9,7 @@ function BusinessList() {
     const [businesses, setBusinesses] = useState([])
 
     useEffect(() => {
-        fetch(`http://localhost:3000/businesses/user/index`, {
+        fetch(`${businessURL}/user/index`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

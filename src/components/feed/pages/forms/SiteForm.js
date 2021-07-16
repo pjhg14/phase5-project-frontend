@@ -84,7 +84,8 @@ function SiteForm({ site, setEditing }) {
             />
 
             <Form.Input 
-                type="text" 
+                type="text"
+                // label="https://"
                 icon="linkify" 
                 iconPosition="left" 
                 placeholder="URL" 

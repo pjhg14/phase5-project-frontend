@@ -2,7 +2,8 @@ import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { useParams } from "react-router"
 import { useHistory } from "react-router-dom"
-import { Form, Button } from "semantic-ui-react";
+import { Form, Button, Message } from "semantic-ui-react";
+import { applicationURL, contactURL } from "../../../../utility/Links";
 
 function ContactForm() {
     const { id } = useParams()
@@ -16,9 +17,12 @@ function ContactForm() {
     const [applications, setApplications] = useState([])
     const [applicationPicker, setApplicationPicker] = useState("")
 
+    const [loaded, setLoaded] = useState(false)
+    const [errors, setErrors] = useState([])
+
     useEffect(() => {
         if (!!id) {
-            fetch(`http://localhost:3000/contacts/${id}`, {
+            fetch(`${contactURL}/${id}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -41,7 +45,7 @@ function ContactForm() {
                     setApplicationPicker(queriedContact.application_id)
                 })
         }
-        fetch(`http://localhost:3000/applications/user/index`, {
+        fetch(`${applicationURL}/user/index`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -52,13 +56,30 @@ function ContactForm() {
             .then(queriedApplications => {
                 setApplications(queriedApplications)
                 setApplicationPicker(queriedApplications[0].id)
+                setLoaded(true)
             })
     },[id])
 
-    const applicationOptions = applications.map(application => {
-        // TODO: change business name to alias once implemented
+    const applicationOptions = [
+        {
+            text: "Please select an application",
+            value: "none"
+        },
+        ...applications.map(application => {
+            return(
+                {
+                    text: application.alias,
+                    value: application.id
+                }
+            )
+        })
+    ]
+
+    const errorList = errors.map(error => {
         return(
-            <option key={application.id} value={application.id}>{application.business.name}</option>
+            <Message.Item key={error}>
+                {error}
+            </Message.Item>
         )
     })
 
@@ -85,7 +106,7 @@ function ContactForm() {
     function add(newContact) {
         // Create Business in backend
 
-        fetch("http://localhost:3000/contacts", {
+        fetch(contactURL, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -93,11 +114,12 @@ function ContactForm() {
             },
             body: JSON.stringify(newContact),
         })
-            .then((resp) => resp.json())
+            .then(resp => resp.json())
             .then(json => {
                 // stuff
                 if (json.error) {
                     console.log(json.details)
+                    setErrors(json.details)
                 } else {
                     console.log(json.message)
                     history.push(`/feed/contacts`)
@@ -106,7 +128,7 @@ function ContactForm() {
     }
 
     function edit(editedContact) {
-        fetch(`http://localhost:3000/contacts/${id}`, {
+        fetch(`${contactURL}/${id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -116,9 +138,9 @@ function ContactForm() {
         })
             .then(resp => resp.json())
             .then(json => {
-                // stuff
                 if (json.error) {
                     console.log(json.details)
+                    setErrors(json.details)
                 } else {
                     console.log(json.message)
                     history.push(`/feed/contacts/info/${id}`)
@@ -130,29 +152,64 @@ function ContactForm() {
         <div>
             <h2>{!id ? "Add" : "Edit"} Contact</h2>
             <h3>Contact Form</h3>
-            <Form onSubmit={handleFormSubmit}>
-                <label>First Name:</label>
-                <input type="text" value={firstName} onChange={e => setFirstName(e.target.value)}/>
-                <label>Last Name:</label>
-                <input type="text" value={lastName} onChange={e => setLastName(e.target.value)}/>
-                <label>Suffix:</label>
-                <input type="text" value={suffix} onChange={e => setSuffix(e.target.value)}/>
-                <label>Email:</label>
-                <input type="text" value={email} onChange={e => setEmail(e.target.value)}/>
-                <label>Profile:</label>
-                <input type="text" value={profileURL} onChange={e => setProfileURL(e.target.value)}/>
-                {!id && 
-                    <>
-                        <label>Application:</label>
-                        <select value={applicationPicker} onChange={e => setApplicationPicker(e.target.value)}>
-                            <option value="">Please Select an Application</option>
-                            {applicationOptions}
-                        </select>
-                    </>
-                }
-                
+            <Form className="main-form" onSubmit={handleFormSubmit} error={errors.length > 0}>
+                <Form.Input
+                    placeholder="Contact's First Name" 
+                    label="First Name"
+                    type="text" 
+                    value={firstName} 
+                    onChange={e => setFirstName(e.target.value)}
+                />
+
+                <Form.Input 
+                    placeholder="Contact's Last Name"
+                    label="Last Name"
+                    type="text" 
+                    value={lastName} 
+                    onChange={e => setLastName(e.target.value)}
+                />
+
+                <Form.Input 
+                    placeholder="Contact's Suffix"
+                    label="Suffix"
+                    type="text" 
+                    value={suffix} 
+                    onChange={e => setSuffix(e.target.value)}
+                />
+
+                <Form.Input 
+                    placeholder="Contact's Email Address"
+                    label="Email"
+                    type="text" 
+                    value={email} 
+                    onChange={e => setEmail(e.target.value)}
+                />
+
+                <Form.Input 
+                    placeholder="ex: personal or LinkedIn"
+                    label="Site"
+                    type="text" 
+                    value={profileURL} 
+                    onChange={e => setProfileURL(e.target.value)}
+                />
+
+                <Form.Select 
+                    loading={!loaded}
+                    disabled={!loaded || id}
+                    placeholder="Please Select an Application"
+                    label="Application"
+                    options={applicationOptions}
+                    value={applicationPicker}
+                    onChange={(e, {name, value}) => setApplicationPicker(value)}
+                />
 
                 <Button type="submit">Submit</Button>
+                <Message error>
+                    <Message.Header>Header</Message.Header>
+                    <Message.List>
+                        {errorList}
+                    </Message.List>
+                </Message>
             </Form>
         </div>
     )

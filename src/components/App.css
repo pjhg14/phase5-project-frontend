@@ -40,16 +40,12 @@ div.ui.segment.custom {
     left: 0;
     right: 0;
     display: grid;
-    /* align-items: baseline; */
     grid-template: auto auto auto / 5fr 5fr auto;
     
 }
 
 #user-details {
     text-align: left;
-    /* background-color: white; */
-    /* padding: 25px; */
-    /* border-radius: .28571429rem; */
 }
 
 #db-app-section {
@@ -61,7 +57,6 @@ div.ui.segment.custom {
 #db-bus-section {
     grid-column: 2;
     grid-row: 1;
-    /* position: relative; */
     margin-left: 5%;
 }
 
@@ -72,7 +67,10 @@ div.ui.segment.custom {
     margin-left: 5%;
 }
 
+#debug {
+    border: black solid 3px;
+}
 
-/* #card {
-    border: 3px black solid;
-} */
+.main-form {
+    text-align: left;
+}

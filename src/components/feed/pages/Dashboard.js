@@ -10,6 +10,7 @@ function Dashboard() {
     const [contacts, setContacts] = useState([])
 
     useEffect(() => {
+        // TODO: change routes to enable standard user url
         fetch("http://localhost:3000/user/dashboard", {
             method: "GET",
             headers: {

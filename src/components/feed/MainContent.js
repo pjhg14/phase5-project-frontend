@@ -10,6 +10,7 @@ import ApplicationPage from "./pages/ApplicationPage";
 import BusinessPage from "./pages/BusinessPage";
 import ContactPage from "./pages/ContactPage";
 import CalendarPage from "./pages/CalendarPage";
+import { userURL } from "../../utility/Links";
 
 function MainContent() {
     const { url } = useRouteMatch()
@@ -17,7 +18,7 @@ function MainContent() {
     const [loaded, setLoaded] = useState(false)
 
     useEffect(() => {
-        fetch("http://localhost:3000/users/get", {
+        fetch(`${userURL}/get`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -48,8 +49,6 @@ function MainContent() {
                         <Route path={`${url}/profile`}>
                             <Profile />
                         </Route>
-                        {/* TODO: create re-directs for forms */}
-                        {/* TODO: create error text for failed requests */}
                         <Route path={`${url}/applications`}>
                             <ApplicationPage />
                         </Route>

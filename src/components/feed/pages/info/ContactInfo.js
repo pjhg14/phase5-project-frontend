@@ -1,16 +1,25 @@
 import { useEffect, useState } from "react"
-import { Link, useHistory, useParams, useRouteMatch } from "react-router-dom"
+import { useSelector } from "react-redux"
+import { useHistory, useParams, useRouteMatch } from "react-router-dom"
+import { Button, Card, Divider } from "semantic-ui-react"
+import { contactURL } from "../../../../utility/Links"
 
 function ContactInfo() {
+    // Hooks
+    const user = useSelector(state => state.user)
     const { url } = useRouteMatch()
     const { id } = useParams()
     const history = useHistory()
+
+    // State
     const [contact, setContact] = useState(null)
     const [loaded, setLoaded] = useState(false)
+
+    // Path
     const fixedPath = url.split("/").slice(0,3).join("/")
 
     useEffect(() => {
-        fetch(`http://localhost:3000/contacts/${id}`, {
+        fetch(`${contactURL}/${id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -27,7 +36,7 @@ function ContactInfo() {
     if (!loaded) return <h1>Loading...</h1>
 
     function handleDelete() {
-        fetch(`http://localhost:3000/contacts/${id}`, {
+        fetch(`${contactURL}/${id}`, {
             method: "DELETE",
             headers: {
                 Authorization: `Bearer ${localStorage.token}`
@@ -47,10 +56,20 @@ function ContactInfo() {
 
     const conversationList = contact.conversations.map(conversation => {
         return(
-            <div id="card" key={conversation.id}>
-                <p>Content: {conversation.content}</p>
-                <p>Contact Date: {conversation.contact_date}</p>
-            </div>
+            <Card key={conversation.id}>
+                <Card.Content>
+                    <Card.Header>
+                        Message from: {user.full_name === conversation.author ? "Me" : conversation.author}
+                    </Card.Header>
+                    <Card.Meta>
+                        Recieved: {conversation.contact_date}
+                    </Card.Meta>
+                    <Card.Description>
+                        {conversation.content}
+                    </Card.Description>
+                </Card.Content>
+                
+            </Card>
         )
     })
 
@@ -59,16 +78,20 @@ function ContactInfo() {
             <h3>Contact:</h3>
             <p>Name: {contact.full_name}</p>
             <p>Email: {contact.email}</p>
-            <p>Profile URL: {contact.profile_url}</p>
+            <p>Profile URL: {contact.profile_url ? contact.profile_url : "<None Provided>"}</p>
 
             <h4>Conversations:</h4>
-            {conversationList}
+            <Card.Group centered>
+                {conversationList}
+            </Card.Group>
 
-            <h4>Edit Contact</h4>
-            <Link to={`${fixedPath}/edit/${id}`}>edit</Link>
+            <Divider horizontal />
 
-            <h4>Delete Contact</h4>
-            <button onClick={handleDelete}>Delete</button>
+            <div id="button-bar">
+                <Button icon="arrow left" onClick={() => history.push(fixedPath)} />
+                <Button onClick={() => history.push(`${fixedPath}/edit/${id}`)}>Edit</Button>
+                <Button onClick={handleDelete} color="red" inverted>Delete</Button>
+            </div>
         </div>
     )
 }

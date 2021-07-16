@@ -36,11 +36,13 @@ function ProjectCard({ project }) {
                     <Card.Meta>
                         <p>{project.project_date}</p>
                         Completed? {project.completed ? "Yes" : "No"}
-                        <Button size="mini" icon="edit" onClick={() => setEditing(true)}/>
                     </Card.Meta>
                 </Card.Content> 
             }
-            <Button icon="trash" color="red" inverted onClick={handleDelete}/>
+            <Button.Group>
+                <Button size="mini" icon="edit" onClick={() => setEditing(true)}/>
+                <Button icon="trash" color="red" inverted onClick={handleDelete}/>
+            </Button.Group>
         </Card>
     )
 }

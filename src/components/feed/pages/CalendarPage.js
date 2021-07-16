@@ -3,13 +3,14 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
+import { applicationURL } from '../../../utility/Links'
 
 function CalendarPage() {
     const [events, setEvents] = useState([])
     const history = useHistory()
 
     useEffect(() => {
-        fetch(`http://localhost:3000/applications/user/index`, {
+        fetch(`${applicationURL}/user/index`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -68,54 +69,54 @@ function CalendarPage() {
 
 export default CalendarPage
 
-const initialEvents = [
-    {
-        title: "test1",
-        test: "Hi There",
-        start: new Date().toISOString().replace(/T.*$/, ''), // YYYY-MM-DD of today
-        end: new Date().toISOString().replace(/T.*$/, ''), // YYYY-MM-DD of today
-        allDay: true
-    },
-    {
-        title: "test2",
-        test: "Hoi",
-        start: new Date().toISOString().replace(/T.*$/, ''), // YYYY-MM-DD of today
-        end: new Date().toISOString().replace(/T.*$/, ''), // YYYY-MM-DD of today
-        allDay: true
-    },
-    // {
-    //     id: 3,
-    //     title: "test3",
-    //     start: new Date().toISOString().replace(/T.*$/, ''), // YYYY-MM-DD of today
-    //     end: new Date().toISOString().replace(/T.*$/, ''), // YYYY-MM-DD of today
-    //     allDay: true
-    // },
-    // {
-    //     id: 4,
-    //     title: "test4",
-    //     start: new Date().toISOString().replace(/T.*$/, ''), // YYYY-MM-DD of today
-    //     end: new Date().toISOString().replace(/T.*$/, ''), // YYYY-MM-DD of today
-    //     allDay: true
-    // },
-    // {
-    //     id: 5,
-    //     title: "test4",
-    //     start: new Date().toISOString().replace(/T.*$/, ''), // YYYY-MM-DD of today
-    //     end: new Date().toISOString().replace(/T.*$/, ''), // YYYY-MM-DD of today
-    //     allDay: true
-    // },
-    // {
-    //     id: 6,
-    //     title: "test4",
-    //     start: new Date().toISOString().replace(/T.*$/, ''), // YYYY-MM-DD of today
-    //     end: new Date().toISOString().replace(/T.*$/, ''), // YYYY-MM-DD of today
-    //     allDay: true
-    // },
-    // {
-    //     id: 7,
-    //     title: "test4",
-    //     start: new Date().toISOString().replace(/T.*$/, ''), // YYYY-MM-DD of today
-    //     end: new Date().toISOString().replace(/T.*$/, ''), // YYYY-MM-DD of today
-    //     allDay: true
-    // }
-]
+// const initialEvents = [
+//     {
+//         title: "test1",
+//         test: "Hi There",
+//         start: new Date().toISOString().replace(/T.*$/, ''), // YYYY-MM-DD of today
+//         end: new Date().toISOString().replace(/T.*$/, ''), // YYYY-MM-DD of today
+//         allDay: true
+//     },
+//     {
+//         title: "test2",
+//         test: "Hoi",
+//         start: new Date().toISOString().replace(/T.*$/, ''), // YYYY-MM-DD of today
+//         end: new Date().toISOString().replace(/T.*$/, ''), // YYYY-MM-DD of today
+//         allDay: true
+//     },
+//     {
+//         id: 3,
+//         title: "test3",
+//         start: new Date().toISOString().replace(/T.*$/, ''), // YYYY-MM-DD of today
+//         end: new Date().toISOString().replace(/T.*$/, ''), // YYYY-MM-DD of today
+//         allDay: true
+//     },
+//     {
+//         id: 4,
+//         title: "test4",
+//         start: new Date().toISOString().replace(/T.*$/, ''), // YYYY-MM-DD of today
+//         end: new Date().toISOString().replace(/T.*$/, ''), // YYYY-MM-DD of today
+//         allDay: true
+//     },
+//     {
+//         id: 5,
+//         title: "test4",
+//         start: new Date().toISOString().replace(/T.*$/, ''), // YYYY-MM-DD of today
+//         end: new Date().toISOString().replace(/T.*$/, ''), // YYYY-MM-DD of today
+//         allDay: true
+//     },
+//     {
+//         id: 6,
+//         title: "test4",
+//         start: new Date().toISOString().replace(/T.*$/, ''), // YYYY-MM-DD of today
+//         end: new Date().toISOString().replace(/T.*$/, ''), // YYYY-MM-DD of today
+//         allDay: true
+//     },
+//     {
+//         id: 7,
+//         title: "test4",
+//         start: new Date().toISOString().replace(/T.*$/, ''), // YYYY-MM-DD of today
+//         end: new Date().toISOString().replace(/T.*$/, ''), // YYYY-MM-DD of today
+//         allDay: true
+//     }
+// ]

@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { useHistory } from "react-router-dom";
-import { Form, Button } from "semantic-ui-react";
+import { Form, Button, Message, Grid, Rating } from "semantic-ui-react";
+import { applicationURL, businessURL } from "../../../../utility/Links";
 
 function ApplicationForm() {
     const { id } = useParams()
@@ -18,19 +19,30 @@ function ApplicationForm() {
     const [wage, setWage] = useState("")
     const [businesses, setBuisnesses] = useState([])
     const [businessPicker, setBusinessPicker] = useState("")
-    
+
+    // business form state
+    const [name, setName] = useState("")
+    const [address, setAddress] = useState("")
+    const [field, setField] = useState("")
+    const [motto, setMotto] = useState("")
+    const [priority, setPriority] = useState("")
+    const [description, setDescription] = useState("")
+
+    // function state
+    const [loaded, setLoaded] = useState(false)
+    const [errors, setErrors] = useState([])
 
     useEffect(() => {
         if (!!id) {
             // prepare form with application information
-            fetch(`http://localhost:3000/applications/${id}`, {
+            fetch(`${applicationURL}/${id}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${localStorage.token}`
                 }
             })
-                .then((resp) => resp.json())
+                .then(resp => resp.json())
                 .then(queriedApplication => {
                     setAlias(queriedApplication.alias)
                     setRole(queriedApplication.role)
@@ -41,7 +53,8 @@ function ApplicationForm() {
                     setBusinessPicker(queriedApplication.business_id)
                 })
         }
-        fetch(`http://localhost:3000/businesses/user/index`, {
+
+        fetch(`${businessURL}/user/index`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -55,43 +68,89 @@ function ApplicationForm() {
                     console.log("Oops, no businesses")
                 } else {
                     setBuisnesses(queriedBusinesses)
-                    setBusinessPicker(queriedBusinesses[0].id)
-
+                    setLoaded(true)
                 }
             })
     },[id])
 
-    const businessOptions = businesses.map(business => {
+    // Semantic form
+    const businessOptions = [
+        {
+            text: "Please select a business",
+            value: "none"
+        },
+        {
+            text: "Add a business",
+            value: "create"
+        },
+        ...businesses.map(business => {
+            return(
+                {
+                    text: business.name,
+                    value: business.id
+                }
+            )
+        })
+    ]
+
+    const errorList = errors.map(error => {
         return(
-            <option key={business.id} value={business.id}>{business.name}</option>
+            <Message.Item key={error}>
+                {error}
+            </Message.Item>
         )
     })
 
     function handleFormSubmit(event) {
         event.preventDefault()
 
-        const payload = {
-            alias: alias,
-            role: role,
-            apply_date: applyDate,
-            start_date: startDate,
-            wage_type: wageType,
-            wage: wage,
-            user_id: user.id,
-            business_id: businessPicker
-        }
+        if (businessPicker !== "none") {
+            let payload
 
-        if (!id) {
-            add(payload)
+            if (businessPicker !== "create") {
+                payload = {
+                    alias: alias,
+                    role: role,
+                    apply_date: applyDate,
+                    start_date: startDate,
+                    wage_type: wageType,
+                    wage: wage,
+                    user_id: user.id,
+                    business_id: businessPicker
+                }
+            } else {
+                payload = {
+                    alias: alias,
+                    role: role,
+                    apply_date: applyDate,
+                    start_date: startDate,
+                    wage_type: wageType,
+                    wage: wage,
+                    user_id: user.id,
+                    business: {
+                        name: name,
+                        address: address,
+                        field: field,
+                        motto: motto,
+                        priority: priority,
+                        description: description
+                    }
+                }
+            }
+    
+            if (!id) {
+                add(payload)
+            } else {
+                edit(payload)
+            }
+
         } else {
-            edit(payload)
+            setErrors(["Must have a business selected"])
         }
     }
 
     function add(newApplication) {
-        // Create Application in backend
-
-        fetch("http://localhost:3000/applications", {
+        fetch(applicationURL, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -104,6 +163,7 @@ function ApplicationForm() {
                 // stuff
                 if (json.error) {
                     console.log(json.details)
+                    setErrors(json.details)
                 } else {
                     console.log(json.message)
                     history.push(`/feed/applications`)
@@ -112,7 +172,7 @@ function ApplicationForm() {
     }
 
     function edit(editedApplication) {
-        fetch(`http://localhost:3000/applications/${id}`, {
+        fetch(`${applicationURL}/${id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -125,6 +185,7 @@ function ApplicationForm() {
                 // stuff
                 if (json.error) {
                     console.log(json.details)
+                    setErrors(json.details)
                 } else {
                     console.log(json.message)
                     history.push(`/feed/applications/info/${id}`)
@@ -132,33 +193,132 @@ function ApplicationForm() {
             })
     }
 
+    // console.log(priority)
+
     return(
         <div>
             <h2>{!id ? "Create" : "Edit"} Application</h2>
             <h3>Application Form</h3>
-            <Form onSubmit={handleFormSubmit}>
-                <label>Application Alias:</label>
-                <input type="text" value={alias} onChange={e => setAlias(e.target.value)}/>
-                <label>Application Role:</label>
-                <input type="text" value={role} onChange={e => setRole(e.target.value)}/>
-                <label>Application Date:</label>
-                <input type="date" value={applyDate} onChange={e => setApplyDate(e.target.value)}/>
-                <label>Job Start Date:</label>
-                <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)}/>
-                <label>Wage Type:</label>
-                <input type="text" value={wageType} onChange={e => setWageType(e.target.value)}/>
-                <label>Wage:</label>
-                <input type="number" value={wage} onChange={e => setWage(e.target.value)}/>
-                <label>Businesses:</label>
-                <select value={businessPicker} onChange={e => setBusinessPicker(e.target.value)}>
-                    {businessOptions}
-                </select>
+            <Form className="main-form" onSubmit={handleFormSubmit} error={errors.length > 0}>
+                <Grid columns={businessPicker === "create" ? 2 : 1}>
+                    <Grid.Row>
+                        <Grid.Column>
+                            <Form.Input
+                                placeholder="ex: [role] oppertunity at [business name]"
+                                label="Application Alias"
+                                type="text"
+                                value={alias}
+                                onChange={e => setAlias(e.target.value)}
+                            />
+                            <Form.Input
+                                placeholder="ex: Engineer, Agriculturist, Economist, etc."
+                                label="Role"
+                                type="text" 
+                                value={role} 
+                                onChange={e => setRole(e.target.value)}
+                            />
+                            <Form.Input 
+                                label="Apply Date"
+                                type="date" 
+                                value={applyDate} 
+                                onChange={e => setApplyDate(e.target.value)}
+                            />
+                            <Form.Input 
+                                label="Expected Start Date"
+                                type="date" 
+                                value={startDate} 
+                                onChange={e => setStartDate(e.target.value)}
+                            />
+                            <Form.Input 
+                                placeholder="ex: Salary, Hourly"
+                                label="Wage Type"
+                                type="text" 
+                                value={wageType} 
+                                onChange={e => setWageType(e.target.value)}
+                            />
+                            <Form.Input 
+                                placeholder="90000, 78000, 28.50, 32.00"
+                                label="Wage"
+                                type="number" 
+                                value={wage} 
+                                onChange={e => setWage(e.target.value)}
+                            />
+                            <Form.Select 
+                                loading={!loaded}
+                                disabled={!loaded || id}
+                                placeholder="Please Select a Business"
+                                label="Businesses"
+                                options={businessOptions}
+                                value={businessPicker}
+                                onChange={(e, {name, value}) => setBusinessPicker(value)}
+                            />
+                        </Grid.Column>
+
+                        {businessPicker === "create" &&
+                            <Grid.Column>
+                                <h3>Business:</h3>
+                                <Form>
+                                    <Form.Input 
+                                        placeholder="ex: Robinson-Hayfield Labs"
+                                        label="Business Name"
+                                        type="text" 
+                                        value={name} 
+                                        onChange={e => setName(e.target.value)}
+                                    />
+                                    <Form.Input 
+                                        placeholder="ex: 2121 Example street"
+                                        label="Address"
+                                        type="text" 
+                                        value={address} 
+                                        onChange={e => setAddress(e.target.value)}
+                                    />
+                                    <Form.Input 
+                                        placeholder="Recreational Facilities and Services, Commercial Real Estate, etc."
+                                        label="Field"
+                                        type="text" 
+                                        value={field} 
+                                        onChange={e => setField(e.target.value)}
+                                    />
+                                    <Form.Input 
+                                        placeholder="ex: Intuitive system-worthy monitoring"
+                                        label="Motto"
+                                        type="text" 
+                                        value={motto} 
+                                        onChange={e => setMotto(e.target.value)}
+                                    />
+                                    <label>
+                                        <strong>Priority</strong>
+                                    </label>
+                                    <br/>
+                                    <Rating 
+                                        maxRating={5} 
+                                        value={priority} 
+                                        onRate={(e, {rating}) => setPriority(rating)}
+                                    />
+                                    
+                                    <br/>
+                                    <br/>
+
+                                    <Form.TextArea 
+                                        placeholder="Short description of business"
+                                        label="Description"
+                                        value={description} 
+                                        onChange={e => setDescription(e.target.value)}
+                                    />
+                                </Form>
+                            </Grid.Column>
+                        }
+                    </Grid.Row>
+                </Grid>
 
                 <Button type="submit">Submit</Button>
+                <Message error>
+                    <Message.Header>Header</Message.Header>
+                    <Message.List>
+                        {errorList}
+                    </Message.List>
+                </Message>
             </Form>
-            
-            {/* <h3>Business Form (optional)(TODO)</h3> */}
-
         </div>
     )
 }

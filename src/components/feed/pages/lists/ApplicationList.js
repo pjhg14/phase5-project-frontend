@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import { Card, Divider } from "semantic-ui-react";
+import { applicationURL } from "../../../../utility/Links";
 import ApplicationCard from "../cards/ApplicationCard";
 
 function ApplicationList() {
@@ -8,7 +9,7 @@ function ApplicationList() {
     const [applications, setApplications] = useState([])
 
     useEffect(() => {
-        fetch("http://localhost:3000/applications/user/index", {
+        fetch(`${applicationURL}/user/index`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

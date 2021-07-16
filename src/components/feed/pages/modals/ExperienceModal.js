@@ -1,31 +1,17 @@
 import { useState } from "react"
-import { Modal, Icon, Button } from 'semantic-ui-react'
+import { Modal, Button } from 'semantic-ui-react'
 import ExperienceForm from "../forms/ExperienceForm"
 
 function ExperienceModal({ experience }) {
     const [open, setOpen] = useState(false)
     const [isEdit, setIsEdit] = useState(false)
 
-    function handleExpDelete(event) {
-        fetch(`http://localhost:3000/experience/${experience.id}`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.token}`
-            }
-        })
-            .then(resp => resp.json())
-            .then(json => {
-                console.log(json)
-            })
-    }
-
     return(
         <Modal
             onClose={() => setOpen(false)}
             onOpen={() => setOpen(true)}
             open={open}
-            trigger={<Icon name="edit"/>}
+            trigger={<Button icon="edit" />}
         >   
             <Modal.Header>{isEdit ? `${experience.title}` : `Edit Experience`}</Modal.Header>
             {isEdit ? 
@@ -43,7 +29,6 @@ function ExperienceModal({ experience }) {
             }
             <Modal.Actions>
                 <Button onClick={() => setIsEdit(!isEdit)}>{isEdit ? "Cancel" : "Edit"}</Button>
-                <Button icon="trash" onClick={handleExpDelete}/>
             </Modal.Actions>
         </Modal>
     )
